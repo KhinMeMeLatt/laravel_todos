@@ -9,7 +9,7 @@ $botman->hears('show my todos', function ($bot) {
     if(count($todos) > 0) {
         $bot->reply('Your todos are:');
         foreach($todos as $todo) {
-            $bot->reply($todo->task);
+            $bot->reply($todo->id.' - '.$todo->task);
         }
     } else {
         $bot->reply('You do not have any todos.');
@@ -30,4 +30,17 @@ $botman->hears('add new todo', function ($bot) {
         ]);
         $conversation->say('You added a new todo for "'.$answer.'"');
     });
+});
+
+$botman->hears('finish todo (\w+)', function ($bot, $id) {
+    $todo = Todo::find($id);
+
+    if(is_null($todo)) {
+        $bot->reply('Sorry, I could not find the todo "'.$id.'"');
+    } else {
+        $todo->completed = true;
+        $todo->save();
+
+        $bot->reply('Whohoo, you finished "'.$todo->task.'"!');
+    }
 });
