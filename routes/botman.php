@@ -44,3 +44,14 @@ $botman->hears('finish todo (\w+)', function ($bot, $id) {
         $bot->reply('Whohoo, you finished "'.$todo->task.'"!');
     }
 });
+
+$botman->hears('delete todo (\w+)', function ($bot, $id) {
+    $todo = Todo::find($id);
+
+    if(is_null($todo)) {
+        $bot->reply('Sorry, I could not find the todo "'.$id.'"');
+    } else {
+        $todo->delete();
+        $bot->reply('You successfully deleted todo "'.$todo->task.'"!');
+    }
+});
